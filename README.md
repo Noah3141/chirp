@@ -3,7 +3,7 @@
 This is a [T3 Stack](https://create.t3.gg/) project, first bootstrapped with `create-t3-app`. Then, it was connected to planetscale, clerk, and axiom.
 
 -   [Next.js](https://nextjs.org)
--   [Clerk]
+-   [Clerk](https://clerk.com/)
 -   [Prisma](https://prisma.io)
 -   [Tailwind CSS](https://tailwindcss.com)
 -   [PlanetScale](https://app.planetscale.com/)
