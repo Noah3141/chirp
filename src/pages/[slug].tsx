@@ -42,7 +42,9 @@ const ProfilePage: NextPage<{ username: string }> = ({ username }) => {
             <Head>
                 <title>{data.username}</title>
                 <meta name="description" content="🐦" />
-                <link rel="icon" href="/favicon.ico" />
+                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+                <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+                <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
             </Head>
             <PageLayout>
                 <div className="relative h-40 border-slate-400 bg-slate-600">
@@ -88,7 +90,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
     const username: string = slug.replace("@", "");
     await ssg.profiles.getUserByUsername.prefetch({ username: slug });
-    console.log("Username is currently as ", username);
     return {
         props: {
             trpcState: ssg.dehydrate(),

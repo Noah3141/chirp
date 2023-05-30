@@ -8,6 +8,9 @@ await import("./src/env.mjs");
 const config = {
     reactStrictMode: true,
     images: {
+        dangerouslyAllowSVG: true,
+        contentDispositionType: "attachment",
+        contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
         domains: ["images.clerk.dev"],
     },
 

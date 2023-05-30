@@ -1,10 +1,9 @@
-import { SignInButton, useUser } from "@clerk/nextjs";
+import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import { type NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import { PostView } from "~/components/postview";
 
-import Link from "next/link";
 import { useState } from "react";
 import { LoadingPage, LoadingSpinner } from "~/components/loading";
 import { api } from "~/utils/api";
@@ -91,6 +90,13 @@ const Feed = () => {
     );
 };
 
+const SignOutFloat = () => {
+    return (
+        <div className="absolute left-5 top-28 text-yellow-400">
+            <SignOutButton />
+        </div>
+    );
+};
 // HOME PAGE
 const Home: NextPage = () => {
     const { isLoaded: userLoaded, isSignedIn } = useUser();
@@ -103,7 +109,9 @@ const Home: NextPage = () => {
             <Head>
                 <title>Chirp</title>
                 <meta name="description" content="🐦" />
-                <link rel="icon" href="/favicon.ico" />
+                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+                <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+                <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
             </Head>
             <PageLayout>
                 <div className="flex border-b border-slate-400 p-4">
@@ -112,7 +120,12 @@ const Home: NextPage = () => {
                             <SignInButton />
                         </div>
                     )}
-                    {isSignedIn && <CreatePostWizard />}
+                    {isSignedIn && (
+                        <>
+                            <CreatePostWizard />
+                            <SignOutFloat />
+                        </>
+                    )}
                 </div>
                 <Feed />
             </PageLayout>

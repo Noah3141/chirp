@@ -58,7 +58,6 @@ export const postsRouter = createTRPCRouter({
             const post = await ctx.prisma.post.findUnique({
                 where: { id: input.id },
             });
-            console.log(post);
 
             if (!post || !post.id) throw new TRPCError({ code: "NOT_FOUND" });
 

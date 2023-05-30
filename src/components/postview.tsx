@@ -13,7 +13,6 @@ export const PostView = (props: PostWithUser) => {
     const { post, author } = props;
 
     if (!author.username) throw new TRPCError({ code: "NOT_FOUND" });
-    console.log(post.id);
 
     return (
         <div key={post.id} className="flex gap-3 border-b border-slate-400 p-4">
