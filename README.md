@@ -1,15 +1,15 @@
 # Chirp - Microservice Twitter Clone in T3 Stack
 
-This is a [T3 Stack](https://create.t3.gg/) project, first bootstrapped with `create-t3-app`. Then, it was connected to planetscale, clerk, and axiom.
+This is a [T3 Stack](https://create.t3.gg/) project, first bootstrapped with `create-t3-app`. It makes use of a number of microservices:
 
--   [Next.js](https://nextjs.org)
--   [Clerk](https://clerk.com/)
--   [Prisma](https://prisma.io)
--   [Tailwind CSS](https://tailwindcss.com)
--   [PlanetScale](https://app.planetscale.com/)
--   [tRPC](https://trpc.io)
--   [Axiom](https://axiom.co/)
--   [Upstash](https://upstash.com/)
+-   [Next.js](https://nextjs.org) (Web Framework)
+-   [Clerk](https://clerk.com/) (Authentication)
+-   [Prisma](https://prisma.io) (ORM)
+-   [Tailwind CSS](https://tailwindcss.com) (Styling)
+-   [PlanetScale](https://app.planetscale.com/) (Serverless DB)
+-   [tRPC](https://trpc.io) (Typescript functional REST)
+-   [Axiom](https://axiom.co/) (Logging)
+-   [Upstash](https://upstash.com/) (Serverless Rate Limiting)
 
 ## Learn More
 
