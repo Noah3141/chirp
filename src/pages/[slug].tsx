@@ -46,13 +46,13 @@ export const getStaticProps: GetStaticProps = async (context) => {
         transformer: SuperJSON,
     });
 
-        const slug = context.params?.slug
+    const slug = context.params?.slug;
 
-        if (typeof slug !== "string") throw new Error("no slug")
+    if (typeof slug !== "string") throw new Error("no slug");
 
     return {
-        props: {}
-    }
-});
+        props: {},
+    };
+};
 
 export default ProfilePage;
