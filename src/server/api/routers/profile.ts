@@ -13,13 +13,13 @@ export const profileRouter = createTRPCRouter({
                 username: [input.username],
             });
 
-            if (!user) {
-                throw new TRPCError({
-                    code: "INTERNAL_SERVER_ERROR",
-                    message: "User not found",
-                });
-            }
+            // if (!user) {
+            //     throw new TRPCError({
+            //         code: "INTERNAL_SERVER_ERROR",
+            //         message: "User not found",
+            //     });
+            // }
 
-            return filterUserForClient(user);
+            return filterUserForClient(user!);
         }),
 });
