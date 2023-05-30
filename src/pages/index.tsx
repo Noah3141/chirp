@@ -6,9 +6,10 @@ import Image from "next/image";
 
 import Link from "next/link";
 import { useState } from "react";
-import { LoadingPage } from "~/components/loading";
+import { LoadingPage, LoadingSpinner } from "~/components/loading";
 import { api } from "~/utils/api";
 import type { RouterOutputs } from "~/utils/api";
+import toast from "react-hot-toast";
 
 const dayjs = require("dayjs");
 const relativeTime = require("dayjs/plugin/relativeTime");
@@ -25,6 +26,14 @@ const CreatePostWizard = () => {
         onSuccess: () => {
             setInput("");
             ctx.posts.getAll.invalidate();
+        },
+        onError: (e) => {
+            const errorMessage = e.data?.zodError?.fieldErrors.content;
+            if (errorMessage && errorMessage[0]) {
+                toast.error(errorMessage[0]);
+            } else {
+                toast.error("Failed to post! Please try again later.");
+            }
         },
     });
 
@@ -46,8 +55,23 @@ const CreatePostWizard = () => {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 disabled={isPosting}
+                onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                        e.preventDefault();
+                        if (input !== "") {
+                            mutate({ content: input });
+                        }
+                    }
+                }}
             />
-            <button onClick={() => mutate({ content: input })}>Post</button>
+            {input !== "" && !isPosting && (
+                <button onClick={() => mutate({ content: input })}>Post</button>
+            )}
+            {isPosting && (
+                <div className="flex items-center justify-center">
+                    <LoadingSpinner size={20} />
+                </div>
+            )}
         </div>
     );
 };
@@ -67,9 +91,9 @@ const PostView = (props: PostWithUser) => {
                 height={56}
             />
             <div className="flex flex-col">
-                <div className="flex text-slate-300">
+                <div className="flex gap-1 text-slate-300">
                     <span>{`@${author.username}`}</span>
-                    <span className="font-thin">{` · ${dayjs(post.createdAt).fromNow()}`}</span>
+                    <span className=" font-thin">{` · ${dayjs(post.createdAt).fromNow()}`}</span>
                 </div>
                 <span className="text-2xl">{post.content}</span>
             </div>
