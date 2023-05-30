@@ -8,11 +8,6 @@ import { Head } from "next/document";
 const MyApp: AppType = ({ Component, pageProps }) => {
     return (
         <>
-            <Head>
-                <title>Chirp</title>
-                <meta name="description" content="🐦" />
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
             <ClerkProvider>
                 <Toaster position="bottom-center" />
                 <Component {...pageProps} />

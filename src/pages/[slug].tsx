@@ -26,6 +26,8 @@ const ProfilePage: NextPage = () => {
         <>
             <Head>
                 <title>Chirp Profile</title>
+                <meta name="description" content="🐦" />
+                <link rel="icon" href="/favicon.ico" />
             </Head>
             <main className="flex h-screen justify-center ">
                 <div>{data.username}</div>
@@ -49,6 +51,8 @@ export const getStaticProps: GetStaticProps = async (context) => {
     const slug = context.params?.slug;
 
     if (typeof slug !== "string") throw new Error("no slug");
+
+    await ssg.profiles.getUserByUsername.prefetch({ username: slug });
 
     return {
         props: {},
