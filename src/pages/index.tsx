@@ -1,5 +1,4 @@
 import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
-import { Post } from "@prisma/client";
 import { type NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
