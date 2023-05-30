@@ -10,6 +10,7 @@ import { LoadingPage, LoadingSpinner } from "~/components/loading";
 import { api } from "~/utils/api";
 import type { RouterOutputs } from "~/utils/api";
 import toast from "react-hot-toast";
+import { PageLayout } from "~/components/layout";
 
 const dayjs = require("dayjs");
 const relativeTime = require("dayjs/plugin/relativeTime");
@@ -40,7 +41,7 @@ const CreatePostWizard = () => {
     if (!user) return null;
 
     return (
-        <div className="flex gap-4">
+        <div className="flex w-full gap-4">
             <Image
                 src={user.profileImageUrl}
                 alt="Profile image"
@@ -94,7 +95,7 @@ const PostView = (props: PostWithUser) => {
             </Link>
             <div className="flex flex-col">
                 <div className="flex gap-1 text-slate-300">
-                    <Link href={`/@${author.username}`}>
+                    <Link className="hover:text-slate-500" href={`/@${author.username}`}>
                         <span>{`@${author.username}`}</span>
                     </Link>
                     <Link href={`/post/${post.id}`}>
@@ -140,19 +141,17 @@ const Home: NextPage = () => {
                 <meta name="description" content="🐦" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <main className="flex h-screen justify-center ">
-                <div className="w-full max-w-2xl border-x border-slate-400">
-                    <div className="border-b border-slate-400 p-4">
-                        {!isSignedIn && (
-                            <div className="flex justify-center">
-                                <SignInButton />
-                            </div>
-                        )}
-                        {isSignedIn && <CreatePostWizard />}
-                    </div>
-                    <Feed />
+            <PageLayout>
+                <div className="flex border-b border-slate-400 p-4">
+                    {!isSignedIn && (
+                        <div className="flex justify-center">
+                            <SignInButton />
+                        </div>
+                    )}
+                    {isSignedIn && <CreatePostWizard />}
                 </div>
-            </main>
+                <Feed />
+            </PageLayout>
         </>
     );
 };

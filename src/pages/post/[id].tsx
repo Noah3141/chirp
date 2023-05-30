@@ -10,6 +10,7 @@ import { LoadingPage, LoadingSpinner } from "~/components/loading";
 import { api } from "~/utils/api";
 import type { RouterOutputs } from "~/utils/api";
 import toast from "react-hot-toast";
+import { PageLayout } from "~/components/layout";
 
 const dayjs = require("dayjs");
 const relativeTime = require("dayjs/plugin/relativeTime");
@@ -128,7 +129,7 @@ const SinglePostPage: NextPage = () => {
             <Head>
                 <title>Chirp Post</title>
             </Head>
-            <main className="flex h-screen justify-center "></main>
+            <PageLayout>Text</PageLayout>
         </>
     );
 };
