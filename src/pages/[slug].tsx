@@ -1,17 +1,17 @@
-import { GetStaticProps, InferGetServerSidePropsType, type NextPage } from "next";
+import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
+import { PageLayout } from "~/components/layout";
 
 import { api } from "~/utils/api";
 
-const dayjs = require("dayjs");
-const relativeTime = require("dayjs/plugin/relativeTime");
-dayjs.extend(relativeTime);
-
 const ProfilePage: NextPage<{ username: string }> = ({ username }) => {
-    const { data, isLoading } = api.profiles.getUserByUsername.useQuery({ username });
+    const { data, isLoading } = api.profiles.getUserByUsername.useQuery({ username: username });
 
-    if (!data) return <div>404</div>;
+    if (isLoading) return <LoadingPage />;
+    if (!data) return <div className="p-16 text-6xl">404</div>;
+
+    data.username = data.username ?? "Look";
 
     return (
         <>
@@ -24,7 +24,7 @@ const ProfilePage: NextPage<{ username: string }> = ({ username }) => {
                 <div className="relative h-40 border-slate-400 bg-slate-600">
                     <Image
                         src={data.profileImageUrl}
-                        alt={`${data.username!}`}
+                        alt={`${data.username}`}
                         width={128}
                         height={128}
                         className="absolute bottom-0 left-6 -mb-[64px] rounded-full border-4 border-black bg-black"
@@ -44,7 +44,9 @@ import { createServerSideHelpers } from "@trpc/react-query/server";
 import SuperJSON from "superjson";
 import { appRouter } from "~/server/api/root";
 import { prisma } from "~/server/db";
-import { PageLayout } from "~/components/layout";
+import type { GetStaticProps } from "next";
+import { TRPCError } from "@trpc/server";
+import { LoadingPage } from "~/components/loading";
 
 export const getStaticProps: GetStaticProps = async (context) => {
     const ssg = createServerSideHelpers({
@@ -55,11 +57,12 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
     const slug = context.params?.slug;
 
-    if (typeof slug !== "string") throw new Error("no slug");
+    if (!slug || typeof slug !== "string")
+        throw new TRPCError({ message: "no slug", code: "BAD_REQUEST" });
 
-    const username = slug.replace("@", "");
+    const username: string = slug.replace("@", "");
     await ssg.profiles.getUserByUsername.prefetch({ username: slug });
-
+    console.log("Username is currently as ", username);
     return {
         props: {
             trpcState: ssg.dehydrate(),

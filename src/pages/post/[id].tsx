@@ -11,10 +11,8 @@ import { api } from "~/utils/api";
 import type { RouterOutputs } from "~/utils/api";
 import toast from "react-hot-toast";
 import { PageLayout } from "~/components/layout";
-
-const dayjs = require("dayjs");
-const relativeTime = require("dayjs/plugin/relativeTime");
-dayjs.extend(relativeTime);
+import { PostView } from "~/components/postview";
+import { TRPCError } from "@trpc/server";
 
 // CREATE POST WIZARD
 const CreatePostWizard = () => {
@@ -24,9 +22,9 @@ const CreatePostWizard = () => {
     const ctx = api.useContext();
 
     const { mutate, isLoading: isPosting } = api.posts.create.useMutation({
-        onSuccess: () => {
+        onSuccess: async () => {
             setInput("");
-            ctx.posts.getAll.invalidate();
+            await ctx.posts.getAll.invalidate();
         },
         onError: (e) => {
             const errorMessage = e.data?.zodError?.fieldErrors.content;
@@ -79,28 +77,6 @@ const CreatePostWizard = () => {
 
 type PostWithUser = RouterOutputs["posts"]["getAll"][number];
 
-// POST VIEW
-const PostView = (props: PostWithUser) => {
-    const { post, author } = props;
-    return (
-        <div key={post.id} className="flex gap-3 border-b border-slate-400 p-4">
-            <Image
-                src={author.profileImageUrl}
-                alt={`@${author.username}'s profile image`}
-                className="h-14 w-14 rounded-full"
-                width={56}
-                height={56}
-            />
-            <div className="flex flex-col">
-                <div className="flex gap-1 text-slate-300">
-                    <span>{`@${author.username}`}</span>
-                    <span className=" font-thin">{` · ${dayjs(post.createdAt).fromNow()}`}</span>
-                </div>
-                <span className="text-2xl">{post.content}</span>
-            </div>
-        </div>
-    );
-};
 // FEED
 const Feed = () => {
     const { data, isLoading: postsLoading } = api.posts.getAll.useQuery();
@@ -110,9 +86,12 @@ const Feed = () => {
 
     return (
         <div className="flex flex-col">
-            {data.map((fullPost: PostWithUser) => (
-                <PostView {...fullPost} key={fullPost.post.id} />
-            ))}
+            {data.map((fullPost: PostWithUser) => {
+                if (!fullPost.author || !fullPost.post)
+                    throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+                return <PostView {...fullPost} key={fullPost.post.id} />;
+            })}
         </div>
     );
 };

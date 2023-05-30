@@ -1,7 +1,8 @@
-import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
+import { SignInButton, useUser } from "@clerk/nextjs";
 import { type NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
+import { PostView } from "~/components/postview";
 
 import Link from "next/link";
 import { useState } from "react";
@@ -11,10 +12,6 @@ import type { RouterOutputs } from "~/utils/api";
 import toast from "react-hot-toast";
 import { PageLayout } from "~/components/layout";
 
-const dayjs = require("dayjs");
-const relativeTime = require("dayjs/plugin/relativeTime");
-dayjs.extend(relativeTime);
-
 // CREATE POST WIZARD
 const CreatePostWizard = () => {
     const { user } = useUser();
@@ -23,9 +20,9 @@ const CreatePostWizard = () => {
     const ctx = api.useContext();
 
     const { mutate, isLoading: isPosting } = api.posts.create.useMutation({
-        onSuccess: () => {
+        onSuccess: async () => {
             setInput("");
-            ctx.posts.getAll.invalidate();
+            await ctx.posts.getAll.invalidate();
         },
         onError: (e) => {
             const errorMessage = e.data?.zodError?.fieldErrors.content;
@@ -78,38 +75,6 @@ const CreatePostWizard = () => {
 
 type PostWithUser = RouterOutputs["posts"]["getAll"][number];
 
-// POST VIEW
-const PostView = (props: PostWithUser) => {
-    const { post, author } = props;
-    return (
-        <div key={post.id} className="flex gap-3 border-b border-slate-400 p-4">
-            <Link href={`/@${author.username}`}>
-                <Image
-                    src={author.profileImageUrl}
-                    alt={`@${author.username}'s profile image`}
-                    className="h-14 w-14 rounded-full"
-                    width={56}
-                    height={56}
-                />
-            </Link>
-            <div className="flex flex-col">
-                <div className="flex gap-1 text-slate-300">
-                    <Link className="hover:text-slate-500" href={`/@${author.username}`}>
-                        <span>{`@${author.username}`}</span>
-                    </Link>
-                    <Link href={`/post/${post.id}`}>
-                        <span className=" font-thin">{` · ${dayjs(
-                            post.createdAt
-                        ).fromNow()}`}</span>
-                    </Link>
-                </div>
-                <Link href={`/post/${post.id}`}>
-                    <span className="text-2xl">{post.content}</span>
-                </Link>
-            </div>
-        </div>
-    );
-};
 // FEED
 const Feed = () => {
     const { data, isLoading: postsLoading } = api.posts.getAll.useQuery();
